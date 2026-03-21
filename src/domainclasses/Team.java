@@ -31,4 +31,13 @@ public class Team {
     public void setRecord(Record record) {
         this.record = record;
     }
+
+    // FUNCTIONS
+    public int getTeamRecordPointsFor() {
+        return this.record.getPointsFor();
+    }
+
+    public double getTeamRecordPointsRatio() {
+        return this.record.getPointsRatio();
+    }
 }
