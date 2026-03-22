@@ -1,4 +1,4 @@
-package src.domainclasses;
+package src.models;
 import java.util.ArrayList;
 
 public class Standing {
@@ -10,8 +10,6 @@ public class Standing {
     }
 
     // FUNCTIONS
-
-    // TODO: i think the logics wrong on the loop here (its a bubble sort)
     public void sortStandings() {
         for (int i = 0; i < teamStandings.size() - 1; i++) {
             for (int j = 0; j < teamStandings.size() - 1 - i; j++) {            

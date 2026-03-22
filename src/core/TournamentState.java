@@ -1,4 +1,4 @@
-package src.domainclasses;
+package src.core;
 
 public enum TournamentState {
     IDLE,

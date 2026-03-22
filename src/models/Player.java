@@ -1,4 +1,4 @@
-package src.domainclasses;
+package src.models;
 
 public class Player {
     private String name;
