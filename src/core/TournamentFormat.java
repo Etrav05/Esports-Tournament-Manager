@@ -2,6 +2,7 @@ package src.core;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import src.commands.EnterResultCommand;
 import src.models.Match;
 import src.models.Team;
 
@@ -28,21 +29,21 @@ public enum TournamentFormat {
             ArrayList<Team> winners = new ArrayList<>();
 
             for (int i = 0; i < tournament.getMatches().size(); i++) {
-                Match m = tournament.getMatches().get(i);
+                Match match= tournament.getMatches().get(i);
 
                 System.out.println("\nMatch " + (i + 1) + ": "
-                        + m.getTeam1().getName() + " vs "
-                        + m.getTeam2().getName());
+                        + match.getTeam1().getName() + " vs "
+                        + match.getTeam2().getName());
 
-                System.out.print("Enter score for " + m.getTeam1().getName() + ": ");
+                System.out.print("Enter score for " + match.getTeam1().getName() + ": ");
                 int s1 = scanner.nextInt();
 
-                System.out.print("Enter score for " + m.getTeam2().getName() + ": ");
+                System.out.print("Enter score for " + match.getTeam2().getName() + ": ");
                 int s2 = scanner.nextInt();
 
-                m.enterResults(s1, s2);
+                tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, s1, s2));
 
-                Team winner = (s1 > s2) ? m.getTeam1() : m.getTeam2();
+                Team winner = (s1 > s2) ? match.getTeam1() : match.getTeam2();
                 winners.add(winner);
             }
 
@@ -90,26 +91,26 @@ public enum TournamentFormat {
             ArrayList<Team> losers = new ArrayList<>();
 
             for (int i = 0; i < tournament.getMatches().size(); i++) {
-                Match m = tournament.getMatches().get(i);
+                Match match= tournament.getMatches().get(i);
 
                 System.out.println("\nMatch " + (i + 1) + ": "
-                        + m.getTeam1().getName() + " vs "
-                        + m.getTeam2().getName());
+                        + match.getTeam1().getName() + " vs "
+                        + match.getTeam2().getName());
 
-                System.out.print("Enter score for " + m.getTeam1().getName() + ": ");
+                System.out.print("Enter score for " + match.getTeam1().getName() + ": ");
                 int s1 = scanner.nextInt();
 
-                System.out.print("Enter score for " + m.getTeam2().getName() + ": ");
+                System.out.print("Enter score for " + match.getTeam2().getName() + ": ");
                 int s2 = scanner.nextInt();
 
-                m.enterResults(s1, s2);
+                tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, s1, s2));
 
                 if (s1 > s2) {
-                    winners.add(m.getTeam1());
-                    losers.add(m.getTeam2());
+                    winners.add(match.getTeam1());
+                    losers.add(match.getTeam2());
                 } else {
-                    winners.add(m.getTeam2());
-                    losers.add(m.getTeam1());
+                    winners.add(match.getTeam2());
+                    losers.add(match.getTeam1());
                 }
             }
 
@@ -168,19 +169,19 @@ public enum TournamentFormat {
         @Override
         public void playRound(Tournament tournament, Scanner scanner) {
             for (int i = 0; i < tournament.getMatches().size(); i++) {
-                Match m = tournament.getMatches().get(i);
+                Match match= tournament.getMatches().get(i);
 
                 System.out.println("\nMatch " + (i + 1) + ": "
-                        + m.getTeam1().getName() + " vs "
-                        + m.getTeam2().getName());
+                        + match.getTeam1().getName() + " vs "
+                        + match.getTeam2().getName());
 
-                System.out.print("Enter score for " + m.getTeam1().getName() + ": ");
+                System.out.print("Enter score for " + match.getTeam1().getName() + ": ");
                 int s1 = scanner.nextInt();
 
-                System.out.print("Enter score for " + m.getTeam2().getName() + ": ");
+                System.out.print("Enter score for " + match.getTeam2().getName() + ": ");
                 int s2 = scanner.nextInt();
 
-                m.enterResults(s1, s2);
+                tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, s1, s2));
             }
 
             System.out.println("\nAll matches complete. Check standings for results.");
