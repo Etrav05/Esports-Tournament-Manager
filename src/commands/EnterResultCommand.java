@@ -36,5 +36,6 @@ public class EnterResultCommand implements Command {
         match.setScoreTeam2(prevScoreTeam2);
         match.setStatus(prevStatus);
         match.setResult(prevResult);
+        match.reverseRecords(prevScoreTeam1, prevScoreTeam2);
     }
 }

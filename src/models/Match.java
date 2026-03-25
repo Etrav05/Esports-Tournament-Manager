@@ -87,6 +87,25 @@ public class Match {
         team.getStats().setPointsRatio(ratio);
     }
 
+    public void reverseRecords(int prevScoreTeam1, int prevScoreTeam2) {        
+        team1.getStats().setPointsFor(team1.getStats().getPointsFor() - prevScoreTeam1);
+        team1.getStats().setPointsAgainst(team1.getStats().getPointsAgainst() - prevScoreTeam2);
+
+        team2.getStats().setPointsFor(team2.getStats().getPointsFor() - prevScoreTeam2);
+        team2.getStats().setPointsAgainst(team2.getStats().getPointsAgainst() - prevScoreTeam1);
+
+        if (prevScoreTeam1 > prevScoreTeam2) {
+            team1.getStats().setWins(team1.getStats().getWins() - 1);
+            team2.getStats().setLosses(team2.getStats().getLosses() - 1);
+        } else {
+            team2.getStats().setWins(team2.getStats().getWins() - 1);
+            team1.getStats().setLosses(team1.getStats().getLosses() - 1);
+        }
+
+        updateRatio(team1);
+        updateRatio(team2);
+    }
+
     // GETTERS
     public int getScoreTeam1() {
         return scoreTeam1;
