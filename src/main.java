@@ -38,9 +38,14 @@ public class main {
                         System.out.println("Tournament created successfully.");
                     }
                     try {
-                        newTournament.matchSetup();
+                        newTournament.getFormat().generateBracket(newTournament.getTeams());
                     } catch (Exception e) {
                         System.out.println("Could not generate matches: " + e.getMessage());
+                    }
+                    for (int index = 0; index <= newTournament.getTeams().size(); index++) {
+                        System.out.print("Enter team name: ");
+                        String teamName = userIn.nextLine(); // clear newline
+                        newTournament.setTeamNameAtIndex(index, teamName);
                     }
                     break;
                 case 2:

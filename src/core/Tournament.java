@@ -166,6 +166,10 @@ public class Tournament {
         System.out.println("Next round created with " + matches.size() + " matches.");
     }
 
+    public void setTeamNameAtIndex(int index, String teamName) {
+        teams.get(index).setName(teamName);
+    }
+
     // GETTERS
     public String getName() {
         return this.name;
@@ -215,5 +219,6 @@ public class Tournament {
     public void setMaxTeams(int maxTeams) {
         this.maxTeams = maxTeams;
     }
+
 }
     
