@@ -2,6 +2,7 @@ package src.core;
 import java.util.ArrayList;
 import java.util.Scanner;
 import src.models.Match;
+import src.models.Standing;
 import src.models.Stats;
 import src.models.Team;
 import src.models.modelstates.MatchStatus;
@@ -25,6 +26,7 @@ public class Tournament {
     private int maxTeams;
     private TournamentStateHandler stateHandler;
     private ArrayList<Match> matchHistory;
+    private Standing standing;
 
     public Tournament() {
         this.name = "Default";
@@ -35,6 +37,7 @@ public class Tournament {
         this.maxTeams = 16;
         this.stateHandler = new IdleState();
         this.matchHistory = new ArrayList<>();
+        this.standing = new Standing(this.teams);
     }
 
     // FUNCTIONS
@@ -149,6 +152,11 @@ public class Tournament {
 
     public void playRound(Scanner scanner) {
         this.format.playRound(this, scanner);
+        this.standing.updateStandings();
+    }
+
+    public void displayStandings() {
+        this.standing.display();
     }
 
     public void setTeamNameAtIndex(int index, String teamName) {
@@ -165,7 +173,7 @@ public class Tournament {
 
         Stats stats = new Stats();
         team.setStats(stats);
-         
+
         this.teams.add(team);
     }
 
