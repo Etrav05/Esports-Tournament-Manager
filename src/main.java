@@ -11,8 +11,8 @@ import src.factories.TournamentFactory;
 // TODO: Cretae an override for the toString method in Tournament
 public class main {
     private static void displaySavedTournaments(ArrayList<Tournament> savedTournaments) {
-        // for(Tournament i : savedTournaments)
-            // System.out.print(i.toString());
+        for(Tournament i : savedTournaments)
+            i.basicDisplayTournament();
     }
 
     public static void main(String[] args) {
@@ -42,10 +42,10 @@ public class main {
                     }
                     break;
                 case 2:
-                    // updateTournament();
+                    updateTournament(savedTournaments, userIn);
                     break;
                 case 3:
-                    // displaySavedTournaments(savedTournaments);
+                    displaySavedTournaments(savedTournaments);
                     break;
                 case 4:
                     running = false;
@@ -61,9 +61,9 @@ public class main {
 
      private static Tournament setupTournament(TournamentFactory tournamentFactory, Scanner userIn) {
         System.out.println("\n--- TOURNAMENT CREATION ---");
-        System.out.println("Enter 1 for Round robin,");
-        System.out.println("Enter 2 for Single elimination,");
-        System.out.println("Enter 3 for Double elimination,");
+        System.out.println("Enter 1 for Round robin");
+        System.out.println("Enter 2 for Single elimination");
+        System.out.println("Enter 3 for Double elimination");
         System.out.print("Selection: ");
         int selection = userIn.nextInt();
         userIn.nextLine(); // clear newline
@@ -88,7 +88,7 @@ public class main {
         }
     }
 
-     private static void editTournament(ArrayList<Tournament> savedTournaments, Scanner userIn) {
+     private static void updateTournament(ArrayList<Tournament> savedTournaments, Scanner userIn) {
         boolean editing = true;
 
         if (savedTournaments.isEmpty()) {
@@ -97,24 +97,28 @@ public class main {
         }
 
         displaySavedTournaments(savedTournaments);
-        System.out.print("\nSelect tournament number to edit: ");
-        int index = userIn.nextInt() - 1;
+        System.out.print("\nSelect tournament name to edit: ");
+        String tournamentName = userIn.nextLine();
         userIn.nextLine(); // clear newline
 
-        if (index < 0 || index >= savedTournaments.size()) {
-            System.out.println("Invalid tournament selection.");
+        Tournament selectedTournament = new Tournament();
+        for(Tournament i : savedTournaments) {
+            if (i.getName().equals(tournamentName))
+                selectedTournament = i;
+        }
+
+        if (selectedTournament.getName().equals("Default")) {
+            System.out.print("\nUnable to find tournament with name: " + tournamentName);
             return;
         }
-        Tournament selectedTournament = savedTournaments.get(index);
 
         while (editing) {
             System.out.println("\n--- EDIT TOURNAMENT ---");
             System.out.println("Currently editing: " + selectedTournament.getName());
-            System.out.println("1. Change name");
-            System.out.println("2. Change max teams");
-            System.out.println("3. View details");
-            System.out.println("4. Fill in rounds");
-            System.out.println("5. Back");
+            System.out.println("Enter 1 to change the name");
+            System.out.println("Enter 2 to View bracket");
+            System.out.println("Enter 3 to Fill in rounds");
+            System.out.println("Enter 4 to go Back");
             System.out.print("Selection: ");
 
             int choice = userIn.nextInt();
@@ -129,14 +133,6 @@ public class main {
                     break;
 
                 case 2:
-                    System.out.print("Enter new max teams: ");
-                    int newMax = userIn.nextInt();
-                    userIn.nextLine();
-                    selectedTournament.setMaxTeams(newMax);
-                    System.out.println("Max teams updated.");
-                    break;
-
-                case 3:
                     System.out.println("Name: " + selectedTournament.getName());
                     System.out.println("Format: " + selectedTournament.getFormat());
                     System.out.println("Max Teams: " + selectedTournament.getMaxTeams());
@@ -144,11 +140,11 @@ public class main {
                     System.out.println("State: " + selectedTournament.getTournamentState());
                     break;
 
-                case 4:
+                case 3:
                     fillRounds(selectedTournament, userIn);
                     break;
 
-                case 5:
+                case 4:
                     editing = false;
                     break;
 
@@ -156,6 +152,35 @@ public class main {
                     System.out.println("Invalid selection.");
             }
         }
+    }
+    
+    // Fills out and saves the match results of each round
+    private static void fillRounds(Tournament tournamentToEdit, Scanner userIn) {
+        int rounds = tournamentToEdit.getRounds();
+
+        System.out.println("\n--- FILL TOURNAMENT ROUNDS ---");
+        System.out.println("Tournament: " + tournamentToEdit.getName());
+        System.out.println("Total rounds: " + rounds);
+
+        int teamsRemaining = tournamentToEdit.getMaxTeams();
+
+        for (int round = 1; round <= rounds; round++) {
+            int matches = teamsRemaining / 2;
+
+            System.out.println("\nROUND " + round);
+            for (int match = 1; match <= matches; match++) {
+                System.out.print("Enter winner for Match " + match + ": ");
+                String winner = userIn.nextLine();
+
+                // For now just print it.
+                // Later you should store this in a Round/Match class.
+                System.out.println("Winner recorded: " + winner);
+            }
+
+            teamsRemaining /= 2;
+        }
+
+        System.out.println("All rounds entered.");
     }
 
 }
