@@ -29,7 +29,7 @@ public enum TournamentFormat {
             ArrayList<Team> winners = new ArrayList<>();
 
             for (int i = 0; i < tournament.getMatches().size(); i++) {
-                Match match= tournament.getMatches().get(i);
+                Match match = tournament.getMatches().get(i);
 
                 System.out.println("\nMatch " + (i + 1) + ": "
                         + match.getTeam1().getName() + " vs "
@@ -57,6 +57,7 @@ public enum TournamentFormat {
 
             if (winners.size() == 1) {
                 System.out.println("Champion: " + winners.get(0).getName());
+                tournament.transitionTo(TournamentState.COMPLETE);
                 return;
             }
 
@@ -91,7 +92,7 @@ public enum TournamentFormat {
             ArrayList<Team> losers = new ArrayList<>();
 
             for (int i = 0; i < tournament.getMatches().size(); i++) {
-                Match match= tournament.getMatches().get(i);
+                Match match = tournament.getMatches().get(i);
 
                 System.out.println("\nMatch " + (i + 1) + ": "
                         + match.getTeam1().getName() + " vs "
@@ -124,6 +125,7 @@ public enum TournamentFormat {
             System.out.println("\n--- WINNERS BRACKET ---");
             if (winners.size() == 1) {
                 System.out.println("Tournament Champion: " + winners.get(0).getName());
+                tournament.transitionTo(TournamentState.COMPLETE);
                 return;
             }
 
@@ -168,8 +170,16 @@ public enum TournamentFormat {
 
         @Override
         public void playRound(Tournament tournament, Scanner scanner) {
+            if (tournament.getMatches().isEmpty()) {
+                tournament.transitionTo(TournamentState.COMPLETE);
+
+                Team team = tournament.getWinner();
+
+                System.out.println("Tournament Champion: " + team.getName());
+            }
+            
             for (int i = 0; i < tournament.getMatches().size(); i++) {
-                Match match= tournament.getMatches().get(i);
+                Match match = tournament.getMatches().get(i);
 
                 System.out.println("\nMatch " + (i + 1) + ": "
                         + match.getTeam1().getName() + " vs "

@@ -61,6 +61,7 @@ public class Tournament {
         this.matches.clear();
         this.matches.addAll(this.format.generateBracket(this.teams));
 
+        transitionTo(TournamentState.INPROGRESS);
         System.out.println("Bracket generated: " + this.matches.size() + " matches created");
     }
 
@@ -148,15 +149,17 @@ public class Tournament {
             if (match.getStatus() == MatchStatus.COMPLETE) {
                 System.out.println("  Match " + (i + 1) + ": " + match.getResult());
             } else {
-                System.out.printf("  Match %d: %-15s vs %-15s | PENDING%n", 
+                System.out.printf("  Match %d: %-15s vs %-15s | PENDING%n",
                     (i + 1), match.getTeam1().getName(), match.getTeam2().getName());
             }
         }
     }
 
     public void playRound(Scanner scanner) {
+        transitionTo(TournamentState.UPDATE);
         this.format.playRound(this, scanner);
         this.standing.updateStandings();
+        transitionTo(TournamentState.INPROGRESS);
     }
 
     public void displayStandings() {
@@ -170,6 +173,10 @@ public class Tournament {
     public void addTeam(String teamName) {
         if (this.teams.size() >= this.maxTeams) {
             throw new IllegalStateException("Tournament is full, max teams: " + this.maxTeams);
+        }
+
+        if (this.tournamentState == TournamentState.IDLE) {
+            transitionTo(TournamentState.SETUP);
         }
 
         Team team = new Team();
@@ -216,6 +223,10 @@ public class Tournament {
 
     public CommandHistory getCommandHistory() {
         return this.commandHistory;
+    }
+
+    public Team getWinner() {
+        return this.standing.getTopStanding();
     }
 
      // SETTERS

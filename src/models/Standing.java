@@ -63,5 +63,7 @@ public class Standing {
         return this.teamStandings;
     }
 
-    
+    public Team getTopStanding() {
+        return this.teamStandings.get(0);
+    }
 }
