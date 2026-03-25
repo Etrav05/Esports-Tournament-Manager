@@ -131,6 +131,17 @@ public class Tournament {
         teams.get(index).setName(teamName);
     }
 
+    public void addTeam(String teamName) {
+        if (this.teams.size() >= this.maxTeams) {
+            throw new IllegalStateException("Tournament is full, max teams: " + this.maxTeams);
+        }
+
+        Team team = new Team();
+        team.setName(teamName);
+        
+        this.teams.add(team);
+    }
+
     // GETTERS
     public String getName() {
         return this.name;

@@ -1,5 +1,4 @@
 package src;
-import java.lang.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 import src.core.Tournament;
@@ -9,6 +8,8 @@ import src.factories.TournamentFactory;
 // SINGLE_ELIM, DOUBLE_ELIM, ROUND_ROBIN
 
 public class main {
+    public static int teamAmount = 0;
+    
     private static void displaySavedTournaments(ArrayList<Tournament> savedTournaments) {
         for(Tournament i : savedTournaments)
             i.basicDisplayTournament();
@@ -31,42 +32,45 @@ public class main {
             userIn.nextLine(); // clear newline 
 
             switch (selection) {
-                case 1:
+                case 1 -> {
                     Tournament newTournament = setupTournament(tournamentFactory, userIn);
                     if (newTournament != null) {
-                        savedTournaments.add(newTournament);
-                        System.out.println("Tournament created successfully.");
+                        for (int i = 0; i < teamAmount; i++) {
+                            System.out.print("Enter team name: ");
+                            String teamName = userIn.nextLine(); // clear newline
+
+                            newTournament.addTeam(teamName);
+                        }        
+                        
+                        try {
+                            newTournament.getFormat().generateBracket(newTournament.getTeams());
+
+                            savedTournaments.add(newTournament);
+                            System.out.println("Tournament created successfully.");
+                            
+                        } catch (Exception e) {
+                            System.out.println("Could not generate bracket: " + e.getMessage());
+                        }      
                     }
-                    try {
-                        newTournament.getFormat().generateBracket(newTournament.getTeams());
-                    } catch (Exception e) {
-                        System.out.println("Could not generate matches: " + e.getMessage());
-                    }
-                    for (int index = 0; index <= newTournament.getTeams().size(); index++) {
-                        System.out.print("Enter team name: ");
-                        String teamName = userIn.nextLine(); // clear newline
-                        newTournament.setTeamNameAtIndex(index, teamName);
-                    }
-                    break;
-                case 2:
-                    updateTournament(savedTournaments, userIn);
-                    break;
-                case 3:
-                    displaySavedTournaments(savedTournaments);
-                    break;
-                case 4:
+                }
+
+                case 2 -> updateTournament(savedTournaments, userIn);
+                
+                case 3 -> displaySavedTournaments(savedTournaments);
+                
+                case 4 -> {
                     running = false;
                     System.out.println("Shutting down...");
-                    break;
-                default:
-                    System.out.println("Invalid Selection");
+                }
+                
+                default -> System.out.println("Invalid Selection");
             }
         }
 
         userIn.close();
     }
 
-     private static Tournament setupTournament(TournamentFactory tournamentFactory, Scanner userIn) {
+    private static Tournament setupTournament(TournamentFactory tournamentFactory, Scanner userIn) {
         System.out.println("\n--- TOURNAMENT CREATION ---");
         System.out.println("Enter 1 for Round robin");
         System.out.println("Enter 2 for Single elimination");
@@ -79,28 +83,35 @@ public class main {
         String tournamentName = userIn.nextLine();
 
         System.out.print("Enter number of teams: ");
-        int teamAmount = userIn.nextInt();
+        teamAmount = userIn.nextInt();
         userIn.nextLine(); // clear newline
 
         switch (selection) {
-            case 1:
+            case 1 -> {
                 return tournamentFactory.createRoundRobin(tournamentName, teamAmount);
-            case 2:
+            }
+
+            case 2 -> {
                 return tournamentFactory.createSingleElimination(tournamentName, teamAmount);
-            case 3:
+            }
+
+            case 3 -> {
                 return tournamentFactory.createDoubleElimination(tournamentName, teamAmount);
-            default:
+            }
+
+            default -> {
                 System.out.println("Invalid tournament type.");
                 return null;
+            }
         }
 
     }
 
-     private static void updateTournament(ArrayList<Tournament> savedTournaments, Scanner userIn) {
+    private static void updateTournament(ArrayList<Tournament> savedTournaments, Scanner userIn) {
         boolean editing = true;
 
         if (savedTournaments.isEmpty()) {
-            System.out.println("No tournaments available to edit.");
+            System.out.println("\nNo tournaments available to edit.");
             return;
         }
 
@@ -108,14 +119,15 @@ public class main {
         System.out.print("\nSelect tournament name to edit: ");
         String tournamentName = userIn.nextLine();
 
-        Tournament selectedTournament = new Tournament();
+
+        Tournament selectedTournament = null;
         for(Tournament i : savedTournaments) {
             if (i.getName().equals(tournamentName))
                 selectedTournament = i;
         }
 
-        if (selectedTournament.getName().equals("Default")) {
-            System.out.print("\nUnable to find tournament with name: " + tournamentName);
+        if (selectedTournament == null) {
+            System.out.println("\nUnable to find tournament: " + tournamentName);
             return;
         }
 
@@ -132,37 +144,37 @@ public class main {
             userIn.nextLine(); // clear newline
 
             switch (choice) {
-                case 1:
+                case 1 -> {
                     System.out.print("Enter new tournament name: ");
                     String newName = userIn.nextLine();
                     selectedTournament.setName(newName);
                     System.out.println("Tournament name updated.");
-                    break;
-                case 2:
-                     try {
+                }
+
+                case 2 -> {
+                    try {
                         if (selectedTournament.getMatches().isEmpty()) {
                             System.out.println("No matches found. Generate matches first.");
                         } else {
                             selectedTournament.playRound(userIn);
-                            userIn.nextLine(); // helps avoid scanner weirdness after round input
                         }
                     } catch (Exception e) {
                         System.out.println("Could not play round: " + e.getMessage());
                         userIn.nextLine(); // recover scanner if bad input happens
                     }
-                    break;
-                case 3:
-                     if (selectedTournament.getMatches().isEmpty()) {
+                }
+
+                case 3 -> {
+                    if (selectedTournament.getMatches().isEmpty()) {
                         System.out.println("No matches created yet.");
                     } else {
                         selectedTournament.displayMatches();
                     }
-                    break;
-                case 4:
-                    editing = false;
-                    break;
-                default:
-                    System.out.println("Invalid selection.");
+                }
+
+                case 4 -> editing = false;
+
+                default -> System.out.println("Invalid selection.");
             }
         }
     }
