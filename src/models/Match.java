@@ -40,13 +40,15 @@ public class Match {
         if (this.status != MatchStatus.COMPLETE) {
             throw new IllegalStateException("Match has not completed yet");
         }
-        
-        if (this.scoreTeam1 > this.scoreTeam2) { // Team 1 wins                
-            this.result = "Winner=" + this.team1.getName() + "&Loser=" + this.team2.getName();
-        }
 
-        else { // Team 2 wins
-            this.result = "Winner=" + this.team2.getName() + "&Loser=" + this.team1.getName();
+        // Team 1 wins 
+        if (this.scoreTeam1 > this.scoreTeam2) {                
+            this.result = this.team1.getName() + " def. " + this.team2.getName() + " (" + this.scoreTeam1 + " - " + this.scoreTeam2 + ")";
+        } 
+
+        // Team 2 wins
+        else { 
+            this.result = this.team2.getName() + " def. " + this.team1.getName() + " (" + this.scoreTeam2 + " - " + this.scoreTeam1 + ")";
         }
     }
 

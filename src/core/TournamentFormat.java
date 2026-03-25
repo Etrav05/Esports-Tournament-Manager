@@ -51,6 +51,7 @@ public enum TournamentFormat {
 
         @Override
         public void buildNextRound(Tournament tournament, ArrayList<Team> winners) {
+            tournament.getMatchHistory().addAll(tournament.getMatches());
             tournament.getMatches().clear();
 
             if (winners.size() == 1) {
@@ -116,6 +117,7 @@ public enum TournamentFormat {
         }
 
         public void buildNextRound(Tournament tournament, ArrayList<Team> winners, ArrayList<Team> losers) {
+            tournament.getMatchHistory().addAll(tournament.getMatches());
             tournament.getMatches().clear();
 
             System.out.println("\n--- WINNERS BRACKET ---");

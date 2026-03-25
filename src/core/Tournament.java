@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import src.models.Match;
 import src.models.Team;
+import src.models.modelstates.MatchStatus;
 import src.states.CompleteState;
 import src.states.IdleState;
 import src.states.InprogressState;
@@ -22,6 +23,7 @@ public class Tournament {
     private TournamentState tournamentState;
     private int maxTeams;
     private TournamentStateHandler stateHandler;
+    private ArrayList<Match> matchHistory;
 
     public Tournament() {
         this.name = "Default";
@@ -31,6 +33,7 @@ public class Tournament {
         this.tournamentState = TournamentState.IDLE;
         this.maxTeams = 16;
         this.stateHandler = new IdleState();
+        this.matchHistory = new ArrayList<>();
     }
 
     // FUNCTIONS
@@ -123,6 +126,26 @@ public class Tournament {
         }
     }
 
+    public void displayResults() {
+        System.out.println("\n--- " + this.name + " RESULTS ---");
+
+        if (matchHistory.isEmpty()) {
+            System.out.println("  No matches played yet.");
+            return;
+        }
+
+        for (int i = 0; i < matchHistory.size(); i++) {
+            Match match = matchHistory.get(i);
+
+            if (match.getStatus() == MatchStatus.COMPLETE) {
+                System.out.println("  Match " + (i + 1) + ": " + match.getResult());
+            } else {
+                System.out.printf("  Match %d: %-15s vs %-15s | PENDING%n", 
+                    (i + 1), match.getTeam1().getName(), match.getTeam2().getName());
+            }
+        }
+    }
+
     public void playRound(Scanner scanner) {
         this.format.playRound(this, scanner);
     }
@@ -168,7 +191,11 @@ public class Tournament {
     }
 
     public ArrayList<Match> getMatches() {
-    return this.matches;
+        return this.matches;
+    }
+
+    public ArrayList<Match> getMatchHistory() {
+        return this.matchHistory;
     }
 
      // SETTERS

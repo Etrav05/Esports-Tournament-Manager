@@ -43,7 +43,7 @@ public class main {
                         }        
                         
                         try {
-                            newTournament.getFormat().generateBracket(newTournament.getTeams());
+                            newTournament.generateBracket();
 
                             savedTournaments.add(newTournament);
                             System.out.println("Tournament created successfully.");
@@ -137,7 +137,8 @@ public class main {
             System.out.println("Enter 1 to change the name");
             System.out.println("Enter 2 to enter match results this round");
             System.out.println("Enter 3 to display all matches in the current round");
-            System.out.println("Enter 4 to go Back");
+            System.out.println("Enter 4 to display results");
+            System.out.println("Enter 5 to go Back");
             System.out.print("Selection: ");
 
             int choice = userIn.nextInt();
@@ -172,7 +173,9 @@ public class main {
                     }
                 }
 
-                case 4 -> editing = false;
+                case 4 -> selectedTournament.displayResults();
+
+                case 5 -> editing = false;
 
                 default -> System.out.println("Invalid selection.");
             }
