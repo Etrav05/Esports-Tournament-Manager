@@ -1,5 +1,6 @@
 package src.core;
 import java.util.ArrayList;
+import src.models.Match;
 import src.models.Team;
 import src.states.CompleteState;
 import src.states.IdleState;
@@ -9,10 +10,14 @@ import src.states.SetupState;
 import src.states.TournamentStateHandler;
 import src.states.UpdateState;
 
+// Matthew Romano + Evan Travis - March 26th, 2026 - Tournament class implementation
+// The actual tournament class that will save and handle matches
+
 public class Tournament {
     private String name;
     private TournamentFormat format;
     private ArrayList<Team> teams;
+    private ArrayList<Match> matches;
     private TournamentState tournamentState;
     private int maxTeams;
     private TournamentStateHandler stateHandler;
@@ -21,6 +26,7 @@ public class Tournament {
         this.name = "Default";
         this.format = TournamentFormat.SINGLE_ELIM;
         this.teams = new ArrayList<>();
+        this.matches = new ArrayList<>();
         this.tournamentState = TournamentState.IDLE;
         this.maxTeams = 16;
         this.stateHandler = new IdleState();
@@ -88,44 +94,17 @@ public class Tournament {
         }
     }
 
-    public void displayBracket() {
-        int rounds = this.calculateRounds();
-        int totalTeams = this.teams.size();
+    public void displayMatches() {
+        System.out.println("\n--- CURRENT MATCHES ---");
 
-        System.out.println("/------------------------\\");
-        System.out.println("[    " + this.name + "    ]");
-        System.out.println("\\------------------------/");
+        for (int i = 0; i < matches.size(); i++) {
+            Match m = matches.get(i);
 
-        if (totalTeams < 2) {
-            System.out.println("  Not enough teams to display bracket.");
-            return;
+            System.out.println("Match " + (i + 1) + ": "
+                    + m.getTeam1().getName() + " vs "
+                    + m.getTeam2().getName()
+                    + " | Status: " + m.getStatus());
         }
-
-        int matchesInRound = totalTeams / 2;
-        int teamIndex = 0;
-
-        for (int round = 1; round <= rounds; round++) {
-            System.out.println("  ── Round " + round + " ──────────────────────");
-
-            if (round == 1) {
-                for (int match = 0; match < matchesInRound; match++) {
-                    String team1 = teamIndex < totalTeams ? teams.get(teamIndex++).getName() : "TBD";
-                    String team2 = teamIndex < totalTeams ? teams.get(teamIndex++).getName() : "TBD";
-
-                    System.out.printf("  │  %-10s  vs  %-10s %n", team1, team2);
-                }
-            } else {
-                for (int match = 0; match < matchesInRound; match++) {
-                    System.out.printf("  │  %-10s  vs  %-10s %n", "Winner Match" + (match * 2 + 1), "Winner Match" + (match * 2 + 2));
-                }
-            }
-
-            matchesInRound = matchesInRound / 2;
-            System.out.println();
-        }
-
-        System.out.println("  ── Champion ───────────────────────");
-        System.out.println("  │   None yet   ");
     }
 
     // GETTERS
@@ -153,6 +132,10 @@ public class Tournament {
         return calculateRounds();
     }
 
+    public ArrayList<Match> getMatches() {
+    return this.matches;
+    }
+
      // SETTERS
     public void setName(String name) {
         this.name = name;
@@ -172,6 +155,25 @@ public class Tournament {
 
     public void setMaxTeams(int maxTeams) {
         this.maxTeams = maxTeams;
+    }
+
+    public void matchSetup() {
+        if (teams.size() < 2) {
+            throw new IllegalStateException("Not enough teams to create matches");
+        }
+
+        if (teams.size() % 2 != 0 && format != TournamentFormat.ROUND_ROBIN) {
+            throw new IllegalStateException("Teams must be even in non round robin formats");
+        }
+
+        matches.clear();
+
+        for (int i = 0; i < teams.size(); i += 2) {
+            Match match = new Match(teams.get(i), teams.get(i + 1));
+            matches.add(match);
+        }
+
+        System.out.println("Initial matches created: " + matches.size());
     }
     
 }
