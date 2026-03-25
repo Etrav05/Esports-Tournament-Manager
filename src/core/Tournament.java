@@ -38,6 +38,21 @@ public class Tournament {
         return this.format.calculateRounds(this.maxTeams);
     }
 
+    public void generateBracket() {
+        if (this.teams.size() < 2) {
+            throw new IllegalStateException("Not enough teams to generate bracket");
+        }
+
+        if (this.teams.size() % 2 != 0 && this.format != TournamentFormat.ROUND_ROBIN) {
+            throw new IllegalStateException("Teams must be even for non-round robin formats");
+        }
+
+        this.matches.clear();
+        this.matches.addAll(this.format.generateBracket(this.teams));
+
+        System.out.println("Bracket generated: " + this.matches.size() + " matches created");
+    }
+
     public void transitionTo(TournamentState newState) {
         this.stateHandler.validateTransition(newState);
         this.tournamentState = newState;
@@ -107,6 +122,49 @@ public class Tournament {
                     + " | Status: " + m.getStatus());
         }
     }
+  
+    public void playRound(Scanner scanner) {
+        ArrayList<Team> winners = new ArrayList<>();
+
+        for (int i = 0; i < matches.size(); i++) {
+            Match m = matches.get(i);
+
+            System.out.println("\nMatch " + (i + 1) + ": "
+                    + m.getTeam1().getName() + " vs "
+                    + m.getTeam2().getName());
+
+            System.out.print("Enter score for " + m.getTeam1().getName() + ": ");
+            int s1 = scanner.nextInt();
+
+            System.out.print("Enter score for " + m.getTeam2().getName() + ": ");
+            int s2 = scanner.nextInt();
+
+            m.enterResults(s1, s2);
+
+            // Determine winner
+            Team winner = (s1 > s2) ? m.getTeam1() : m.getTeam2();
+            winners.add(winner);
+        }
+      
+        // Build next round
+        buildNextRound(winners);
+    }
+
+    private void buildNextRound(ArrayList<Team> winners) {
+        matches.clear();
+
+        if (winners.size() == 1) {
+            System.out.println( "Champion: " + winners.get(0).getName());
+            return;
+        }
+
+        for (int i = 0; i < winners.size(); i += 2) {
+            Match match = new Match(winners.get(i), winners.get(i + 1));
+            matches.add(match);
+        }
+
+        System.out.println("Next round created with " + matches.size() + " matches.");
+    }
 
     // GETTERS
     public String getName() {
@@ -156,68 +214,6 @@ public class Tournament {
 
     public void setMaxTeams(int maxTeams) {
         this.maxTeams = maxTeams;
-    }
-
-    public void matchSetup() {
-        if (teams.size() < 2) {
-            throw new IllegalStateException("Not enough teams to create matches");
-        }
-
-        if (teams.size() % 2 != 0 && format != TournamentFormat.ROUND_ROBIN) {
-            throw new IllegalStateException("Teams must be even in non round robin formats");
-        }
-
-        matches.clear();
-
-        for (int i = 0; i < teams.size(); i += 2) {
-            Match match = new Match(teams.get(i), teams.get(i + 1));
-            matches.add(match);
-        }
-
-        System.out.println("Initial matches created: " + matches.size());
-    }
-
-    public void playRound(Scanner scanner) {
-        ArrayList<Team> winners = new ArrayList<>();
-
-        for (int i = 0; i < matches.size(); i++) {
-            Match m = matches.get(i);
-
-            System.out.println("\nMatch " + (i + 1) + ": "
-                    + m.getTeam1().getName() + " vs "
-                    + m.getTeam2().getName());
-
-            System.out.print("Enter score for " + m.getTeam1().getName() + ": ");
-            int s1 = scanner.nextInt();
-
-            System.out.print("Enter score for " + m.getTeam2().getName() + ": ");
-            int s2 = scanner.nextInt();
-
-            m.enterResults(s1, s2);
-
-            // Determine winner
-            Team winner = (s1 > s2) ? m.getTeam1() : m.getTeam2();
-            winners.add(winner);
-        }
-
-        // Build next round
-        buildNextRound(winners);
-    }
-
-    private void buildNextRound(ArrayList<Team> winners) {
-        matches.clear();
-
-        if (winners.size() == 1) {
-            System.out.println( "Champion: " + winners.get(0).getName());
-            return;
-        }
-
-        for (int i = 0; i < winners.size(); i += 2) {
-            Match match = new Match(winners.get(i), winners.get(i + 1));
-            matches.add(match);
-        }
-
-        System.out.println("Next round created with " + matches.size() + " matches.");
     }
 }
     
