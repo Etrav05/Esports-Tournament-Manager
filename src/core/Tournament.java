@@ -67,4 +67,5 @@ public class Tournament {
     public void setMaxTeams(int maxTeams) {
         this.maxTeams = maxTeams;
     }
+    
 }
