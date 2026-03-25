@@ -1,5 +1,6 @@
 package src.core;
 import java.util.ArrayList;
+import java.util.Scanner;
 import src.models.Match;
 import src.models.Team;
 import src.states.CompleteState;
@@ -121,6 +122,49 @@ public class Tournament {
                     + " | Status: " + m.getStatus());
         }
     }
+  
+    public void playRound(Scanner scanner) {
+        ArrayList<Team> winners = new ArrayList<>();
+
+        for (int i = 0; i < matches.size(); i++) {
+            Match m = matches.get(i);
+
+            System.out.println("\nMatch " + (i + 1) + ": "
+                    + m.getTeam1().getName() + " vs "
+                    + m.getTeam2().getName());
+
+            System.out.print("Enter score for " + m.getTeam1().getName() + ": ");
+            int s1 = scanner.nextInt();
+
+            System.out.print("Enter score for " + m.getTeam2().getName() + ": ");
+            int s2 = scanner.nextInt();
+
+            m.enterResults(s1, s2);
+
+            // Determine winner
+            Team winner = (s1 > s2) ? m.getTeam1() : m.getTeam2();
+            winners.add(winner);
+        }
+      
+        // Build next round
+        buildNextRound(winners);
+    }
+
+    private void buildNextRound(ArrayList<Team> winners) {
+        matches.clear();
+
+        if (winners.size() == 1) {
+            System.out.println( "Champion: " + winners.get(0).getName());
+            return;
+        }
+
+        for (int i = 0; i < winners.size(); i += 2) {
+            Match match = new Match(winners.get(i), winners.get(i + 1));
+            matches.add(match);
+        }
+
+        System.out.println("Next round created with " + matches.size() + " matches.");
+    }
 
     // GETTERS
     public String getName() {
@@ -172,3 +216,4 @@ public class Tournament {
         this.maxTeams = maxTeams;
     }
 }
+    
