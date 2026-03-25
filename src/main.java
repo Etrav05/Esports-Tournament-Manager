@@ -198,7 +198,8 @@ public class main {
             System.out.println("Enter 3 to display all matches in the current round");
             System.out.println("Enter 4 to display results");
             System.out.println("Enter 5 to view standings");
-            System.out.println("Enter 6 to go Back");
+            System.out.println("Enter 6 to undo last entered result");
+            System.out.println("Enter 7 to go Back");
             System.out.print("Selection: ");
 
             int choice = userIn.nextInt();
@@ -237,7 +238,16 @@ public class main {
 
                 case 5 -> selectedTournament.displayStandings();
 
-                case 6 -> editing = false;
+                case 6 -> {
+                    try {
+                        selectedTournament.getCommandHistory().undoLast();
+                        System.out.println("Last result undone successfully.");
+                    } catch (Exception e) {
+                        System.out.println("Nothing to undo: " + e.getMessage());
+                    }
+                }
+
+                case 7 -> editing = false;
 
                 default -> System.out.println("Invalid selection.");
             }
