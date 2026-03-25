@@ -37,6 +37,21 @@ public class Tournament {
         return this.format.calculateRounds(this.maxTeams);
     }
 
+    public void generateBracket() {
+        if (this.teams.size() < 2) {
+            throw new IllegalStateException("Not enough teams to generate bracket");
+        }
+
+        if (this.teams.size() % 2 != 0 && this.format != TournamentFormat.ROUND_ROBIN) {
+            throw new IllegalStateException("Teams must be even for non-round robin formats");
+        }
+
+        this.matches.clear();
+        this.matches.addAll(this.format.generateBracket(this.teams));
+
+        System.out.println("Bracket generated: " + this.matches.size() + " matches created");
+    }
+
     public void transitionTo(TournamentState newState) {
         this.stateHandler.validateTransition(newState);
         this.tournamentState = newState;
@@ -156,24 +171,4 @@ public class Tournament {
     public void setMaxTeams(int maxTeams) {
         this.maxTeams = maxTeams;
     }
-
-    public void matchSetup() {
-        if (teams.size() < 2) {
-            throw new IllegalStateException("Not enough teams to create matches");
-        }
-
-        if (teams.size() % 2 != 0 && format != TournamentFormat.ROUND_ROBIN) {
-            throw new IllegalStateException("Teams must be even in non round robin formats");
-        }
-
-        matches.clear();
-
-        for (int i = 0; i < teams.size(); i += 2) {
-            Match match = new Match(teams.get(i), teams.get(i + 1));
-            matches.add(match);
-        }
-
-        System.out.println("Initial matches created: " + matches.size());
-    }
-    
 }
