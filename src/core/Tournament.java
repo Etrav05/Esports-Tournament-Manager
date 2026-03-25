@@ -1,6 +1,13 @@
 package src.core;
 import java.util.ArrayList;
 import src.models.Team;
+import src.states.CompleteState;
+import src.states.IdleState;
+import src.states.InprogressState;
+import src.states.SaveState;
+import src.states.SetupState;
+import src.states.TournamentStateHandler;
+import src.states.UpdateState;
 
 public class Tournament {
     private String name;
@@ -8,6 +15,7 @@ public class Tournament {
     private ArrayList<Team> teams;
     private TournamentState tournamentState;
     private int maxTeams;
+    private TournamentStateHandler stateHandler;
 
     public Tournament() {
         this.name = "Default";
@@ -15,11 +23,48 @@ public class Tournament {
         this.teams = new ArrayList<>();
         this.tournamentState = TournamentState.IDLE;
         this.maxTeams = 16;
+        this.stateHandler = new IdleState();
     }
 
     // FUNCTIONS
     public int calculateRounds() {
         return this.format.calculateRounds(this.maxTeams);
+    }
+
+    public void transitionTo(TournamentState newState) {
+        this.stateHandler.validateTransition(newState);
+        this.tournamentState = newState;
+        this.stateHandler = resolveState(newState);
+    }
+
+    private TournamentStateHandler resolveState(TournamentState state) {
+        switch (state) {
+            case IDLE -> {        
+                return new IdleState();
+            }
+
+            case SETUP -> {       
+                return new SetupState();
+            }
+
+            case INPROGRESS -> {  
+                return new InprogressState();
+            }
+
+            case UPDATE -> {      
+                return new UpdateState();
+            }
+
+            case COMPLETE -> {    
+                return new CompleteState();
+            }
+
+            case SAVE -> {        
+                return new SaveState();
+            }
+
+            default -> throw new IllegalArgumentException("Unknown state: " + state);
+        }
     }
 
     // GETTERS
