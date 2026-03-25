@@ -1,6 +1,6 @@
 package src.models;
 
-public class Record {
+public class Stats {
     private int wins;
     private int losses;
     private int pointsFor;

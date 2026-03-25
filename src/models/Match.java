@@ -34,6 +34,7 @@ public class Match {
         this.status = MatchStatus.COMPLETE;
 
         fillMatchResult();
+        updateStatss();
     }
 
     public void fillMatchResult() { // NO TIES ALLOWED
@@ -50,6 +51,40 @@ public class Match {
         else { 
             this.result = this.team2.getName() + " def. " + this.team1.getName() + " (" + this.scoreTeam2 + " - " + this.scoreTeam1 + ")";
         }
+    }
+
+    private void updateStatss(){
+        team1.getStats().setPointsFor(team1.getStats().getPointsFor() + scoreTeam1);
+        team1.getStats().setPointsAgainst(team1.getStats().getPointsAgainst() + scoreTeam2);
+
+        team2.getStats().setPointsFor(team2.getStats().getPointsFor() + scoreTeam2);
+        team2.getStats().setPointsAgainst(team2.getStats().getPointsAgainst() + scoreTeam1);
+
+        if (scoreTeam1 > scoreTeam2) {
+            team1.getStats().setWins(team1.getStats().getWins() + 1);
+            team2.getStats().setLosses(team2.getStats().getLosses() + 1);
+        } 
+        
+        else {
+            team2.getStats().setWins(team2.getStats().getWins() + 1);
+            team1.getStats().setLosses(team1.getStats().getLosses() + 1);
+        }
+
+        updateRatio(team1);
+        updateRatio(team2);
+    }
+
+    private void updateRatio(Team team) {
+        int pAgainst = team.getStats().getPointsAgainst();
+        int pFor = team.getStats().getPointsFor();
+
+        if (pAgainst == 0) {
+             team.getStats().setPointsRatio((double)pFor);
+        }
+
+        double ratio = pFor / pAgainst;
+        
+        team.getStats().setPointsRatio(ratio);
     }
 
     // GETTERS
