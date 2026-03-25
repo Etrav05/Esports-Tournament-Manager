@@ -1,6 +1,7 @@
 package src.core;
 import java.util.ArrayList;
 import java.util.Scanner;
+import src.commands.CommandHistory;
 import src.models.Match;
 import src.models.Standing;
 import src.models.Stats;
@@ -24,9 +25,11 @@ public class Tournament {
     private ArrayList<Match> matches;
     private TournamentState tournamentState;
     private int maxTeams;
+    private Standing standing;
+
     private TournamentStateHandler stateHandler;
     private ArrayList<Match> matchHistory;
-    private Standing standing;
+    private CommandHistory commandHistory;
 
     public Tournament() {
         this.name = "Default";
@@ -38,6 +41,7 @@ public class Tournament {
         this.stateHandler = new IdleState();
         this.matchHistory = new ArrayList<>();
         this.standing = new Standing(this.teams);
+        this.commandHistory = new CommandHistory();
     }
 
     // FUNCTIONS
@@ -208,6 +212,10 @@ public class Tournament {
 
     public ArrayList<Match> getMatchHistory() {
         return this.matchHistory;
+    }
+
+    public CommandHistory getCommandHistory() {
+        return this.commandHistory;
     }
 
      // SETTERS
