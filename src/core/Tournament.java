@@ -2,6 +2,7 @@ package src.core;
 import java.util.ArrayList;
 import java.util.Scanner;
 import src.models.Match;
+import src.models.Stats;
 import src.models.Team;
 import src.models.modelstates.MatchStatus;
 import src.states.CompleteState;
@@ -161,7 +162,10 @@ public class Tournament {
 
         Team team = new Team();
         team.setName(teamName);
-        
+
+        Stats stats = new Stats();
+        team.setStats(stats);
+         
         this.teams.add(team);
     }
 

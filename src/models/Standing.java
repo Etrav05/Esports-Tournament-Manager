@@ -18,14 +18,14 @@ public class Standing {
 
                 boolean swap = false;
 
-                if (a.getTeamRecordWins() < b.getTeamRecordWins()) {
+                if (a.getTeamStatsWins() < b.getTeamStatsWins()) {
                     swap = true;
                 } 
-                else if (a.getTeamRecordWins() == b.getTeamRecordWins()) {
-                    if (a.getTeamRecordPointsRatio() < b.getTeamRecordPointsRatio()) {
+                else if (a.getTeamStatsWins() == b.getTeamStatsWins()) {
+                    if (a.getTeamStatsPointsRatio() < b.getTeamStatsPointsRatio()) {
                         swap = true;
                     } 
-                    else if (a.getTeamRecordPointsRatio() == b.getTeamRecordPointsRatio()) {
+                    else if (a.getTeamStatsPointsRatio() == b.getTeamStatsPointsRatio()) {
                         swap = Math.random() < 0.5;
                     }
                 }

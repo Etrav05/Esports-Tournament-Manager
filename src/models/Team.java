@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class Team {
     private String name;
     private ArrayList<Player> players;
-    private Record record;
+    private Stats stats;
 
     // GETTERS
     public String getName() {
@@ -15,8 +15,8 @@ public class Team {
         return this.players;
     }
 
-    public Record getRecord() {
-        return this.record;
+    public Stats getStats() {
+        return this.stats;
     }
 
     // SETTERS
@@ -28,24 +28,24 @@ public class Team {
         this.players = players;
     }
 
-    public void setRecord(Record record) {
-        this.record = record;
+    public void setStats(Stats stats) {
+        this.stats = stats;
     }
 
     // FUNCTIONS
-    public int getTeamRecordPointsFor() {
-        return this.record.getPointsFor();
+    public int getTeamStatsPointsFor() {
+        return this.stats.getPointsFor();
     }
 
-    public double getTeamRecordPointsRatio() {
-        return this.record.getPointsRatio();
+    public double getTeamStatsPointsRatio() {
+        return this.stats.getPointsRatio();
     }
 
-    public int getTeamRecordWins() {
-        return this.record.getWins();
+    public int getTeamStatsWins() {
+        return this.stats.getWins();
     }
 
-    public double getTeamRecordLosses() {
-        return this.record.getLosses();
+    public double getTeamStatsLosses() {
+        return this.stats.getLosses();
     }
 }
