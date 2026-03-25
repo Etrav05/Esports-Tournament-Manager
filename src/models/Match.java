@@ -1,4 +1,5 @@
 package src.models;
+import src.models.modelstates.MatchStatus;
 
 public class Match {
     private Team team1;
@@ -6,36 +7,50 @@ public class Match {
     private String result;
     private int scoreTeam1;
     private int scoreTeam2;
-    private String status;
+    private MatchStatus status;
 
-    public void setTeam1(Team team1) {
+    public Match(Team team1, Team team2) {
+        if (team1 == null || team2 == null) {
+            throw new IllegalArgumentException("Match requires exactly 2 teams");
+        }
+
+        if (team1 == team2) {
+            throw new IllegalArgumentException("A team cannot play against itself");
+        }
+
         this.team1 = team1;
-    }
-
-    public Team getTeam1() {
-        return team1;
-    }
-
-    public void setTeam2(Team team2) {
         this.team2 = team2;
+        this.status = MatchStatus.PENDING;
     }
 
-    public Team getTeam2() {
-        return team2;
-    }
-
-    public void setResult(String result) {
-        this.result = result;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public void setScoreTeam1(int scoreTeam1) {
+    // FUNCTIONS
+    public void enterResults(int scoreTeam1, int scoreTeam2) {
+        if (scoreTeam1 == scoreTeam2) {
+            throw new IllegalArgumentException("Match cannot end in a tie");
+        }
+        
         this.scoreTeam1 = scoreTeam1;
+        this.scoreTeam2 = scoreTeam2;
+        this.status = MatchStatus.COMPLETE;
+
+        fillMatchResult();
     }
 
+    public void fillMatchResult() { // NO TIES ALLOWED
+        if (this.status != MatchStatus.COMPLETE) {
+            throw new IllegalStateException("Match has not completed yet");
+        }
+        
+        if (this.scoreTeam1 > this.scoreTeam2) { // Team 1 wins                
+            this.result = "Winner=" + this.team1.getName() + "&Loser=" + this.team2.getName();
+        }
+
+        else { // Team 2 wins
+            this.result = "Winner=" + this.team2.getName() + "&Loser=" + this.team1.getName();
+        }
+    }
+
+    // GETTERS
     public int getScoreTeam1() {
         return scoreTeam1;
     }
@@ -44,16 +59,40 @@ public class Match {
         return scoreTeam2;
     }
 
+    public MatchStatus getStatus() {
+        return status;
+    }
+
+    public Team getTeam1() {
+        return team1;
+    }
+
+    public Team getTeam2() {
+        return team2;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    // SETTERS
+    public void setScoreTeam1(int scoreTeam1) {
+        this.scoreTeam1 = scoreTeam1;
+    }
+
     public void setScoreTeam2(int scoreTeam2) {
         this.scoreTeam2 = scoreTeam2;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(MatchStatus status) {
         this.status = status;
     }
 
-    public String getStatus() {
-        return status;
+    public void setTeam1(Team team1) {
+        this.team1 = team1;
     }
 
+    public void setResult(String result) {
+        this.result = result;
+    }
 }
