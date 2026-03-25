@@ -5,7 +5,7 @@ public class Record {
     private int losses;
     private int pointsFor;
     private int pointsAgainst;
-    private Double pointsRatio;
+    private double pointsRatio;
 
     // GETTERS
     public int getWins() {
@@ -24,7 +24,7 @@ public class Record {
         return this.pointsAgainst;
     }
 
-    public Double getPointsRatio() {
+    public double getPointsRatio() {
         return this.pointsRatio;
     }
 
@@ -45,7 +45,7 @@ public class Record {
         this.pointsAgainst = pointsAgainst;
     }
 
-    public void setPointsRatio(Double pointsRatio) {
+    public void setPointsRatio(double pointsRatio) {
         this.pointsRatio = pointsRatio;
     }
 }

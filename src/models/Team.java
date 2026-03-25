@@ -40,4 +40,12 @@ public class Team {
     public double getTeamRecordPointsRatio() {
         return this.record.getPointsRatio();
     }
+
+    public int getTeamRecordWins() {
+        return this.record.getWins();
+    }
+
+    public double getTeamRecordLosses() {
+        return this.record.getLosses();
+    }
 }

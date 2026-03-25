@@ -6,6 +6,12 @@ import src.core.TournamentFormat;
 public class TournamentFactory {
     
     void maxTeamValidation(int maxTeams) {
+        if (maxTeams < 32) {
+            throw new IllegalArgumentException(
+                "Max teams must be less than 32. Entered: " + maxTeams
+            );
+        }
+        
         if (maxTeams < 2 || (maxTeams & (maxTeams - 1)) != 0) {
             throw new IllegalArgumentException(
                 "Max teams requires a power of 2 (e.g. 8, 16, 32). Entered: " + maxTeams

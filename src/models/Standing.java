@@ -13,15 +13,15 @@ public class Standing {
     public void sortStandings() {
         for (int i = 0; i < teamStandings.size() - 1; i++) {
             for (int j = 0; j < teamStandings.size() - 1 - i; j++) {            
-                Team a = teamStandings.get(i);
+                Team a = teamStandings.get(j);
                 Team b = teamStandings.get(j + 1);
 
                 boolean swap = false;
 
-                if (a.getTeamRecordPointsFor() < b.getTeamRecordPointsFor()) {
+                if (a.getTeamRecordWins() < b.getTeamRecordWins()) {
                     swap = true;
                 } 
-                else if (a.getTeamRecordPointsFor() == b.getTeamRecordPointsFor()) {
+                else if (a.getTeamRecordWins() == b.getTeamRecordWins()) {
                     if (a.getTeamRecordPointsRatio() < b.getTeamRecordPointsRatio()) {
                         swap = true;
                     } 
