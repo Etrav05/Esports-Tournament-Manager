@@ -1,4 +1,4 @@
-package models;
+package src.models;
 
 public class Match {
     private Team team1;

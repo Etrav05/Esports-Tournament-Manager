@@ -1,20 +1,33 @@
-package src.domainclasses;
+package src.core;
 import java.util.ArrayList;
+import src.models.Team;
 
 public class Tournament {
     private String name;
-    private String format;
+    private TournamentFormat format;
     private ArrayList<Team> teams;
     private TournamentState tournamentState;
-    private int maxPlayers;
-    private int rounds;
+    private int maxTeams;
+
+    public Tournament() {
+        this.name = "Default";
+        this.format = TournamentFormat.SINGLE_ELIM;
+        this.teams = new ArrayList<>();
+        this.tournamentState = TournamentState.IDLE;
+        this.maxTeams = 16;
+    }
+
+    // FUNCTIONS
+    public int calculateRounds() {
+        return this.format.calculateRounds(this.maxTeams);
+    }
 
     // GETTERS
     public String getName() {
         return this.name;
     }
 
-    public String getFormat() {
+    public TournamentFormat getFormat() {
         return this.format;
     }
 
@@ -26,12 +39,12 @@ public class Tournament {
         return this.tournamentState;
     }
 
-    public int getMaxPlayers() {
-        return this.maxPlayers;
+    public int getMaxTeams() {
+        return this.maxTeams;
     }
 
     public int getRounds() {
-        return this.rounds;
+        return calculateRounds();
     }
 
      // SETTERS
@@ -39,7 +52,7 @@ public class Tournament {
         this.name = name;
     }
 
-    public void setFormat(String format) {
+    public void setFormat(TournamentFormat format) {
         this.format = format;
     }
 
@@ -51,11 +64,7 @@ public class Tournament {
         this.tournamentState = tournamentState;
     }
 
-    public void setMaxPlayers(int maxPlayers) {
-        this.maxPlayers = maxPlayers;
-    }
-
-    public void setRounds(int rounds) {
-        this.rounds = rounds;
+    public void setMaxTeams(int maxTeams) {
+        this.maxTeams = maxTeams;
     }
 }
