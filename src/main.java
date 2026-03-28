@@ -33,13 +33,16 @@ public class main {
         boolean running = true;
 
         while(running) {
-            System.out.println("--- TOURNAMENT MANAGER ---");
-            System.out.println("Enter 1 to create a new tournament.");
-            System.out.println("Enter 2 to edit an existing tournament.");
-            System.out.println("Enter 3 to view all tournaments.");
-            System.out.println("Enter 4 to load a tournament from file.");
-            System.out.println("Enter 5 to save tournament results to file.");
-            System.out.println("Enter 6 to exit.");
+            System.out.println("\n+----------------------------------+");
+            System.out.println("|      ESPORTS TOURNAMENT MANAGER  |");
+            System.out.println("+----------------------------------+");
+            System.out.println("|  1. Create new tournament        |");
+            System.out.println("|  2. Edit existing tournament     |");
+            System.out.println("|  3. View all tournaments         |");
+            System.out.println("|  4. Load tournament from file    |");
+            System.out.println("|  5. Save tournament to file      |");
+            System.out.println("|  6. Exit                         |");
+            System.out.println("+----------------------------------+");
             System.out.print("Selection: ");
             int selection = userIn.nextInt(); 
             userIn.nextLine(); // clear newline 
@@ -73,44 +76,47 @@ public class main {
 
                 case 4 -> {
                     try {
-                        System.out.println("Enter file path to load: ");
+                        System.out.println("\n--- LOAD TOURNAMENT ---");
+                        System.out.print("Enter file path to load: ");
                         String loadPath = userIn.nextLine();
 
                         Tournament loadedTournament = FileManager.loadTournamentFromFile(loadPath, tournamentFactory);
                         savedTournaments.add(loadedTournament);
-                        System.out.println("Tournament loaded successfully.");
+                        System.out.println("[OK] Tournament loaded successfully: " + loadedTournament.getName());
 
                     } catch (Exception e) {
-                        System.out.println("Tournament failed to load.");
+                        System.out.println("[ERROR] Tournament failed to load: " + e.getMessage());
                     }
                 }
 
                 case 5 -> {
-                    if (savedTournaments.isEmpty()) 
-                        System.out.println("No tournament aviable to write.");
+                    if (savedTournaments.isEmpty())
+                        System.out.println("[ERROR] No tournaments available to save.");
                     else {
+                        System.out.println("\n--- SAVE TOURNAMENT ---");
                         displaySavedTournaments(savedTournaments);
-                        System.out.println("Enter tournament name to save: ");
+                        System.out.print("Enter tournament name to save: ");
                         String tournamentName = userIn.nextLine();
 
                         Tournament selectedTournament = null;
                         for (Tournament t : savedTournaments) {
-                            if (t.getName().equals(tournamentName)) 
+                            if (t.getName().equals(tournamentName)) {
                                 selectedTournament = t;
-                            break;
+                                break;
+                            }
                         }
-                        
-                        if (selectedTournament == null) 
-                            System.out.println("Tournament not found.");
+
+                        if (selectedTournament == null)
+                            System.out.println("[ERROR] Tournament not found: " + tournamentName);
                         else {
                             try {
-                                System.out.println("Enter output file path: ");
+                                System.out.print("Enter output file path: ");
                                 String writePath = userIn.nextLine();
 
                                 FileManager.saveResultsToFile(selectedTournament, writePath);
-                                System.out.println("Tournament saved successfully.");
+                                System.out.println("[OK] Tournament saved successfully to: " + writePath);
                             } catch (Exception e) {
-                                System.out.println("Unable to write to file: " + e.getMessage());
+                                System.out.println("[ERROR] Unable to write to file: " + e.getMessage());
                             }
                         }
 
@@ -119,7 +125,7 @@ public class main {
                 
                 case 6 -> {
                     running = false;
-                    System.out.println("Shutting down...");
+                    System.out.println("\nShutting down. Goodbye!");
                 }
                 
                 default -> System.out.println("Invalid Selection");
@@ -130,10 +136,13 @@ public class main {
     }
 
     private static Tournament setupTournament(TournamentFactory tournamentFactory, Scanner userIn) {
-        System.out.println("\n--- TOURNAMENT CREATION ---");
-        System.out.println("Enter 1 for Round robin");
-        System.out.println("Enter 2 for Single elimination");
-        System.out.println("Enter 3 for Double elimination");
+        System.out.println("\n+----------------------------------+");
+        System.out.println("|       CREATE NEW TOURNAMENT      |");
+        System.out.println("+----------------------------------+");
+        System.out.println("|  1. Round Robin                  |");
+        System.out.println("|  2. Single Elimination           |");
+        System.out.println("|  3. Double Elimination           |");
+        System.out.println("+----------------------------------+");
         System.out.print("Selection: ");
         int selection = userIn.nextInt();
         userIn.nextLine(); // clear newline
@@ -191,15 +200,18 @@ public class main {
         }
 
         while (editing) {
-            System.out.println("\n--- EDIT TOURNAMENT ---");
-            System.out.println("Currently editing: " + selectedTournament.getName());
-            System.out.println("Enter 1 to change the name");
-            System.out.println("Enter 2 to enter match results this round");
-            System.out.println("Enter 3 to display all matches in the current round");
-            System.out.println("Enter 4 to display results");
-            System.out.println("Enter 5 to view standings");
-            System.out.println("Enter 6 to undo last entered result");
-            System.out.println("Enter 7 to go Back");
+            System.out.println("\n+----------------------------------+");
+            System.out.println("|          EDIT TOURNAMENT         |");
+            System.out.printf( "|  Editing: %-22s|\n", selectedTournament.getName());
+            System.out.println("+----------------------------------+");
+            System.out.println("|  1. Rename tournament            |");
+            System.out.println("|  2. Enter match results          |");
+            System.out.println("|  3. View current matches         |");
+            System.out.println("|  4. View results                 |");
+            System.out.println("|  5. View standings               |");
+            System.out.println("|  6. Undo last result             |");
+            System.out.println("|  7. Back                         |");
+            System.out.println("+----------------------------------+");
             System.out.print("Selection: ");
 
             int choice = userIn.nextInt();
