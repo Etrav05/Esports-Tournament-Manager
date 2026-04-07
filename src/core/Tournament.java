@@ -139,13 +139,24 @@ public class Tournament {
     public void displayResults() {
         System.out.println("\n--- " + this.name + " RESULTS ---");
 
-        if (matchHistory.isEmpty()) {
+        if (matchHistory.isEmpty() && matches.isEmpty()) {
             System.out.println("  No matches played yet.");
             return;
         }
 
         for (int i = 0; i < matchHistory.size(); i++) {
             Match match = matchHistory.get(i);
+
+            if (match.getStatus() == MatchStatus.COMPLETE) {
+                System.out.println("  Match " + (i + 1) + ": " + match.getResult());
+            } else {
+                System.out.printf("  Match %d: %-15s vs %-15s | PENDING%n",
+                    (i + 1), match.getTeam1().getName(), match.getTeam2().getName());
+            }
+        }
+
+        for (int i = 0; i < matches.size(); i++) {
+            Match match = matches.get(i);
 
             if (match.getStatus() == MatchStatus.COMPLETE) {
                 System.out.println("  Match " + (i + 1) + ": " + match.getResult());

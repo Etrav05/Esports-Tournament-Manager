@@ -245,6 +245,7 @@ public enum TournamentFormat {
                 Team team = tournament.getWinner();
 
                 System.out.println("Tournament Champion: " + team.getName());
+                return;
             }
             
             for (int i = 0; i < tournament.getMatches().size(); i++) {
