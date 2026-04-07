@@ -5,7 +5,7 @@ public class Standing {
     private ArrayList<Team> teamStandings; // This is an IN-ORDER list of the teams based on standings rules
 
     public Standing(ArrayList<Team> teams) {
-        this.teamStandings = new ArrayList<>(teams);
+        this.teamStandings = teams;
     }
 
     // FUNCTIONS
@@ -16,7 +16,7 @@ public class Standing {
     public void display() {
         System.out.println("\n--- STANDINGS ---");
         System.out.println(String.format("%-5s %-15s %-6s %-6s %-10s", "Rank", "Team", "Wins", "Loss", "Ratio"));
-        System.out.println("  ──────────────────────────────────────");
+        System.out.println("--------------------------------------");
 
         for (int i = 0; i < teamStandings.size(); i++) {
             Team team = teamStandings.get(i);
