@@ -79,10 +79,11 @@ public class Match {
         int pFor = team.getStats().getPointsFor();
 
         if (pAgainst == 0) {
-             team.getStats().setPointsRatio((double)pFor);
+            team.getStats().setPointsRatio((double)pFor); 
+            return;
         }
 
-        double ratio = pFor / pAgainst;
+        double ratio = (double) pFor / pAgainst;
         
         team.getStats().setPointsRatio(ratio);
     }
