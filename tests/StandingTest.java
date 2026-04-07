@@ -1,3 +1,5 @@
+package tests;
+
 import org.junit.jupiter.api.Test;
 import src.models.Standing;
 import src.models.Stats;

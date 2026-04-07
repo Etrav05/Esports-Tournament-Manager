@@ -1,6 +1,7 @@
 package src.core;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 import src.commands.CommandHistory;
 import src.models.Match;
 import src.models.Standing;
@@ -162,6 +163,28 @@ public class Tournament {
         transitionTo(TournamentState.INPROGRESS);
     }
 
+    public boolean playNextMatch(Scanner scanner) {
+        Match nextMatch = null;
+
+        for (Match match : this.matches) {
+            if (match.getStatus() == MatchStatus.PENDING) {
+                nextMatch = match;
+                break;
+            }
+        }
+
+        if (nextMatch == null) {
+            System.out.println("No pending matches");
+            return false;
+        }
+
+        transitionTo(TournamentState.UPDATE);
+        this.format.playNextMatch(this, nextMatch, scanner);
+        this.standing.updateStandings();
+        transitionTo(TournamentState.INPROGRESS);
+        return true;
+    }
+
     public void displayStandings() {
         this.standing.display();
     }
@@ -249,6 +272,5 @@ public class Tournament {
     public void setMaxTeams(int maxTeams) {
         this.maxTeams = maxTeams;
     }
-
 }
     

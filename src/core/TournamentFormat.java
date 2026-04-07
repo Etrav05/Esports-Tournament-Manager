@@ -2,9 +2,11 @@ package src.core;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+
 import src.commands.EnterResultCommand;
 import src.models.Match;
 import src.models.Team;
+import src.models.modelstates.MatchStatus;
 
 public enum TournamentFormat {
     SINGLE_ELIM {
@@ -67,6 +69,36 @@ public enum TournamentFormat {
 
             System.out.println("Next round created with " + tournament.getMatches().size() + " matches.");
         }
+
+        @Override
+        public void playNextMatch(Tournament tournament, Match match, Scanner scanner) {
+            System.out.println("\nMatch: " + match.getTeam1().getName() + " vs " + match.getTeam2().getName());
+
+            System.out.print("Enter score for " + match.getTeam1().getName() + ": ");
+            int s1 = scanner.nextInt();
+
+            System.out.print("Enter score for " + match.getTeam2().getName() + ": ");
+            int s2 = scanner.nextInt();
+            scanner.nextLine();
+
+            tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, s1, s2));
+
+            boolean roundComplete = true;
+            for (Match m : tournament.getMatches()) {
+                if (m.getStatus() != MatchStatus.COMPLETE) {
+                    roundComplete = false;
+                    break;
+                }
+            }
+
+            if (roundComplete) {
+                ArrayList<Team> winners = new ArrayList<>();
+                for (Match m : tournament.getMatches()) {
+                    winners.add(m.getScoreTeam1() > m.getScoreTeam2() ? m.getTeam1() : m.getTeam2());
+                }
+                buildNextRound(tournament, winners);
+            }
+        }
     },
 
     DOUBLE_ELIM {
@@ -116,6 +148,43 @@ public enum TournamentFormat {
             }
 
             buildNextRound(tournament, winners, losers);
+        }
+
+        @Override
+        public void playNextMatch(Tournament tournament, Match match, Scanner scanner) {
+            System.out.println("\nMatch: " + match.getTeam1().getName() + " vs " + match.getTeam2().getName());
+
+            System.out.print("Enter score for " + match.getTeam1().getName() + ": ");
+            int s1 = scanner.nextInt();
+
+            System.out.print("Enter score for " + match.getTeam2().getName() + ": ");
+            int s2 = scanner.nextInt();
+            scanner.nextLine();
+
+            tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, s1, s2));
+
+            boolean roundComplete = true;
+            for (Match m : tournament.getMatches()) {
+                if (m.getStatus() != MatchStatus.COMPLETE) {
+                    roundComplete = false;
+                    break;
+                }
+            }
+
+            if (roundComplete) {
+                ArrayList<Team> winners = new ArrayList<>();
+                ArrayList<Team> losers = new ArrayList<>();
+                for (Match m : tournament.getMatches()) {
+                    if (m.getScoreTeam1() > m.getScoreTeam2()) {
+                        winners.add(m.getTeam1());
+                        losers.add(m.getTeam2());
+                    } else {
+                        winners.add(m.getTeam2());
+                        losers.add(m.getTeam1());
+                    }
+                }
+                buildNextRound(tournament, winners, losers);
+            }
         }
 
         public void buildNextRound(Tournament tournament, ArrayList<Team> winners, ArrayList<Team> losers) {
@@ -198,6 +267,33 @@ public enum TournamentFormat {
         }
 
         @Override
+        public void playNextMatch(Tournament tournament, Match match, Scanner scanner) {
+            System.out.println("\nMatch: " + match.getTeam1().getName() + " vs " + match.getTeam2().getName());
+
+            System.out.print("Enter score for " + match.getTeam1().getName() + ": ");
+            int s1 = scanner.nextInt();
+
+            System.out.print("Enter score for " + match.getTeam2().getName() + ": ");
+            int s2 = scanner.nextInt();
+            scanner.nextLine();
+
+            tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, s1, s2));
+
+            boolean allComplete = true;
+            for (Match m : tournament.getMatches()) {
+                if (m.getStatus() != MatchStatus.COMPLETE) {
+                    allComplete = false;
+                    break;
+                }
+            }
+
+            if (allComplete) {
+                System.out.println("\nAll matches complete. Check standings for results.");
+                tournament.transitionTo(TournamentState.COMPLETE);
+            }
+        }
+
+        @Override
         public void buildNextRound(Tournament tournament, ArrayList<Team> winners) {
             // Round robin generates all matches upfront, no next round needed again
         }
@@ -206,5 +302,6 @@ public enum TournamentFormat {
     public abstract int calculateRounds(int teams);
     public abstract ArrayList<Match> generateBracket(ArrayList<Team> teams);
     public abstract void playRound(Tournament t, Scanner scanner);
+    public abstract void playNextMatch(Tournament t, Match m, Scanner scanner);
     public abstract void buildNextRound(Tournament tournament, ArrayList<Team> winners);
 }

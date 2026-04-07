@@ -1,6 +1,7 @@
 package src;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 import src.core.Tournament;
 import src.factories.TournamentFactory;
 import src.io.FileManager;
@@ -230,11 +231,11 @@ public class main {
                         if (selectedTournament.getMatches().isEmpty()) {
                             System.out.println("No matches found. Generate matches first.");
                         } else {
-                            selectedTournament.playRound(userIn);
+                            selectedTournament.playNextMatch(userIn); 
                         }
                     } catch (Exception e) {
-                        System.out.println("Could not play round: " + e.getMessage());
-                        userIn.nextLine(); // recover scanner if bad input happens
+                        System.out.println("Could not play match: " + e.getMessage());
+                        userIn.nextLine();
                     }
                 }
 
