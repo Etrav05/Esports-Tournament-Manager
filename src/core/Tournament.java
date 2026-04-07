@@ -211,6 +211,10 @@ public class Tournament {
         this.teams.add(team);
     }
 
+    public void refreshStandings() {
+        this.standing.updateStandings();
+    }
+
     // GETTERS
     public String getName() {
         return this.name;

@@ -43,7 +43,7 @@ public enum TournamentFormat {
                 System.out.print("Enter score for " + match.getTeam2().getName() + ": ");
                 int s2 = scanner.nextInt();
 
-                tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, s1, s2));
+                tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, tournament, s1, s2));
 
                 Team winner = (s1 > s2) ? match.getTeam1() : match.getTeam2();
                 winners.add(winner);
@@ -81,7 +81,7 @@ public enum TournamentFormat {
             int s2 = scanner.nextInt();
             scanner.nextLine();
 
-            tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, s1, s2));
+            tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, tournament, s1, s2));
 
             boolean roundComplete = true;
             for (Match m : tournament.getMatches()) {
@@ -136,7 +136,7 @@ public enum TournamentFormat {
                 System.out.print("Enter score for " + match.getTeam2().getName() + ": ");
                 int s2 = scanner.nextInt();
 
-                tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, s1, s2));
+                tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, tournament, s1, s2));
 
                 if (s1 > s2) {
                     winners.add(match.getTeam1());
@@ -161,7 +161,7 @@ public enum TournamentFormat {
             int s2 = scanner.nextInt();
             scanner.nextLine();
 
-            tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, s1, s2));
+            tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, tournament, s1, s2));
 
             boolean roundComplete = true;
             for (Match m : tournament.getMatches()) {
@@ -260,7 +260,7 @@ public enum TournamentFormat {
                 System.out.print("Enter score for " + match.getTeam2().getName() + ": ");
                 int s2 = scanner.nextInt();
 
-                tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, s1, s2));
+                tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, tournament, s1, s2));
             }
 
             System.out.println("\nAll matches complete. Check standings for results.");
@@ -277,7 +277,7 @@ public enum TournamentFormat {
             int s2 = scanner.nextInt();
             scanner.nextLine();
 
-            tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, s1, s2));
+            tournament.getCommandHistory().executeCommand(new EnterResultCommand(match, tournament, s1, s2));
 
             boolean allComplete = true;
             for (Match m : tournament.getMatches()) {

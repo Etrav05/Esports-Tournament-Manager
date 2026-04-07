@@ -254,6 +254,7 @@ public class main {
                 case 6 -> {
                     try {
                         selectedTournament.getCommandHistory().undoLast();
+                        selectedTournament.refreshStandings();
                         System.out.println("Last result undone successfully.");
                     } catch (Exception e) {
                         System.out.println("Nothing to undo: " + e.getMessage());

@@ -1,10 +1,14 @@
 package src.commands;
 
+import java.util.ArrayList;
+
+import src.core.Tournament;
 import src.models.Match;
 import src.models.modelstates.MatchStatus;
 
 public class EnterResultCommand implements Command {
     private final Match match;
+    private final Tournament tournament;
     private final int newScoreTeam1;
     private final int newScoreTeam2;
 
@@ -14,8 +18,13 @@ public class EnterResultCommand implements Command {
     private MatchStatus prevStatus;
     private String prevResult;
 
-    public EnterResultCommand(Match match, int scoreTeam1, int scoreTeam2) {
+    private ArrayList<Match> prevMatches;
+    private ArrayList<Match> prevMatchHistory;
+
+
+    public EnterResultCommand(Match match, Tournament tournament, int scoreTeam1, int scoreTeam2) {
         this.match = match;
+        this.tournament = tournament;
         this.newScoreTeam1 = scoreTeam1;
         this.newScoreTeam2 = scoreTeam2;
     }
@@ -27,6 +36,9 @@ public class EnterResultCommand implements Command {
         this.prevStatus = match.getStatus();
         this.prevResult = match.getResult();
 
+        this.prevMatches = new ArrayList<>(tournament.getMatches());
+        this.prevMatchHistory = new ArrayList<>(tournament.getMatchHistory());
+
         match.enterResults(newScoreTeam1, newScoreTeam2);
     }
 
@@ -37,5 +49,10 @@ public class EnterResultCommand implements Command {
         match.setStatus(prevStatus);
         match.setResult(prevResult);
         match.reverseRecords(prevScoreTeam1, prevScoreTeam2);
+
+        tournament.getMatches().clear();
+        tournament.getMatches().addAll(prevMatches);
+        tournament.getMatchHistory().clear();
+        tournament.getMatchHistory().addAll(prevMatchHistory);
     }
 }
