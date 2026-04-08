@@ -21,9 +21,32 @@ import src.io.FileManager;
 
 public class main {
     public static int teamAmount = 0;
-    
+
+    private static int readInt(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String line = scanner.nextLine().trim();
+            try {
+                return Integer.parseInt(line);
+            } catch (NumberFormatException e) {
+                System.out.println("[ERROR] Invalid input. Please enter a whole number.");
+            }
+        }
+    }
+
+    private static String readString(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String line = scanner.nextLine().trim();
+            if (!line.isEmpty()) {
+                return line;
+            }
+            System.out.println("[ERROR] Input cannot be empty. Please try again.");
+        }
+    }
+
     private static void displaySavedTournaments(ArrayList<Tournament> savedTournaments) {
-        for(Tournament i : savedTournaments)
+        for (Tournament i : savedTournaments)
             i.basicDisplayTournament();
     }
 
@@ -33,7 +56,7 @@ public class main {
         Scanner userIn = new Scanner(System.in);
         boolean running = true;
 
-        while(running) {
+        while (running) {
             System.out.println("\n+----------------------------------+");
             System.out.println("|      ESPORTS TOURNAMENT MANAGER  |");
             System.out.println("+----------------------------------+");
@@ -44,42 +67,40 @@ public class main {
             System.out.println("|  5. Save tournament to file      |");
             System.out.println("|  6. Exit                         |");
             System.out.println("+----------------------------------+");
-            System.out.print("Selection: ");
-            int selection = userIn.nextInt(); 
-            userIn.nextLine(); // clear newline 
+            int selection = readInt(userIn, "Selection: ");
 
             switch (selection) {
                 case 1 -> {
                     Tournament newTournament = setupTournament(tournamentFactory, userIn);
                     if (newTournament != null) {
                         for (int i = 0; i < teamAmount; i++) {
-                            System.out.print("Enter team name: ");
-                            String teamName = userIn.nextLine(); // clear newline
-
+                            String teamName = readString(userIn, "Enter team name: ");
                             newTournament.addTeam(teamName);
-                        }        
-                        
+                        }
+
                         try {
                             newTournament.generateBracket();
-
                             savedTournaments.add(newTournament);
                             System.out.println("Tournament created successfully.");
-                            
                         } catch (Exception e) {
-                            System.out.println("Could not generate bracket: " + e.getMessage());
-                        }      
+                            System.out.println("[ERROR] Could not generate bracket: " + e.getMessage());
+                        }
                     }
                 }
 
                 case 2 -> updateTournament(savedTournaments, userIn);
-                
-                case 3 -> displaySavedTournaments(savedTournaments);
+
+                case 3 -> {
+                    if (savedTournaments.isEmpty())
+                        System.out.println("[ERROR] No tournaments to display.");
+                    else
+                        displaySavedTournaments(savedTournaments);
+                }
 
                 case 4 -> {
                     try {
                         System.out.println("\n--- LOAD TOURNAMENT ---");
-                        System.out.print("Enter file path to load: ");
-                        String loadPath = userIn.nextLine();
+                        String loadPath = readString(userIn, "Enter file path to load: ");
 
                         Tournament loadedTournament = FileManager.loadTournamentFromFile(loadPath, tournamentFactory);
                         savedTournaments.add(loadedTournament);
@@ -96,8 +117,7 @@ public class main {
                     else {
                         System.out.println("\n--- SAVE TOURNAMENT ---");
                         displaySavedTournaments(savedTournaments);
-                        System.out.print("Enter tournament name to save: ");
-                        String tournamentName = userIn.nextLine();
+                        String tournamentName = readString(userIn, "Enter tournament name to save: ");
 
                         Tournament selectedTournament = null;
                         for (Tournament t : savedTournaments) {
@@ -111,25 +131,22 @@ public class main {
                             System.out.println("[ERROR] Tournament not found: " + tournamentName);
                         else {
                             try {
-                                System.out.print("Enter output file path: ");
-                                String writePath = userIn.nextLine();
-
+                                String writePath = readString(userIn, "Enter output file path: ");
                                 FileManager.saveResultsToFile(selectedTournament, writePath);
                                 System.out.println("[OK] Tournament saved successfully to: " + writePath);
                             } catch (Exception e) {
                                 System.out.println("[ERROR] Unable to write to file: " + e.getMessage());
                             }
                         }
-
                     }
                 }
-                
+
                 case 6 -> {
                     running = false;
                     System.out.println("\nShutting down. Goodbye!");
                 }
-                
-                default -> System.out.println("Invalid Selection");
+
+                default -> System.out.println("[ERROR] Invalid selection. Please choose 1-6.");
             }
         }
 
@@ -144,36 +161,30 @@ public class main {
         System.out.println("|  2. Single Elimination           |");
         System.out.println("|  3. Double Elimination           |");
         System.out.println("+----------------------------------+");
-        System.out.print("Selection: ");
-        int selection = userIn.nextInt();
-        userIn.nextLine(); // clear newline
+        int selection = readInt(userIn, "Selection: ");
 
-        System.out.print("Enter tournament name: ");
-        String tournamentName = userIn.nextLine();
+        String tournamentName = readString(userIn, "Enter tournament name: ");
 
-        System.out.print("Enter number of teams: ");
-        teamAmount = userIn.nextInt();
-        userIn.nextLine(); // clear newline
-
-        switch (selection) {
-            case 1 -> {
-                return tournamentFactory.createRoundRobin(tournamentName, teamAmount);
-            }
-
-            case 2 -> {
-                return tournamentFactory.createSingleElimination(tournamentName, teamAmount);
-            }
-
-            case 3 -> {
-                return tournamentFactory.createDoubleElimination(tournamentName, teamAmount);
-            }
-
-            default -> {
-                System.out.println("Invalid tournament type.");
-                return null;
-            }
+        teamAmount = readInt(userIn, "Enter number of teams: ");
+        while (teamAmount < 2) {
+            System.out.println("[ERROR] Must have at least 2 teams.");
+            teamAmount = readInt(userIn, "Enter number of teams: ");
         }
 
+        try {
+            switch (selection) {
+                case 1 -> { return tournamentFactory.createRoundRobin(tournamentName, teamAmount); }
+                case 2 -> { return tournamentFactory.createSingleElimination(tournamentName, teamAmount); }
+                case 3 -> { return tournamentFactory.createDoubleElimination(tournamentName, teamAmount); }
+                default -> {
+                    System.out.println("[ERROR] Invalid tournament type.");
+                    return null;
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println("[ERROR] Could not create tournament: " + e.getMessage());
+            return null;
+        }
     }
 
     private static void updateTournament(ArrayList<Tournament> savedTournaments, Scanner userIn) {
@@ -185,18 +196,16 @@ public class main {
         }
 
         displaySavedTournaments(savedTournaments);
-        System.out.print("\nSelect tournament name to edit: ");
-        String tournamentName = userIn.nextLine();
-
+        String tournamentName = readString(userIn, "\nSelect tournament name to edit: ");
 
         Tournament selectedTournament = null;
-        for(Tournament i : savedTournaments) {
+        for (Tournament i : savedTournaments) {
             if (i.getName().equals(tournamentName))
                 selectedTournament = i;
         }
 
         if (selectedTournament == null) {
-            System.out.println("\nUnable to find tournament: " + tournamentName);
+            System.out.println("\n[ERROR] Unable to find tournament: " + tournamentName);
             return;
         }
 
@@ -213,15 +222,11 @@ public class main {
             System.out.println("|  6. Undo last result             |");
             System.out.println("|  7. Back                         |");
             System.out.println("+----------------------------------+");
-            System.out.print("Selection: ");
-
-            int choice = userIn.nextInt();
-            userIn.nextLine(); // clear newline
+            int choice = readInt(userIn, "Selection: ");
 
             switch (choice) {
                 case 1 -> {
-                    System.out.print("Enter new tournament name: ");
-                    String newName = userIn.nextLine();
+                    String newName = readString(userIn, "Enter new tournament name: ");
                     selectedTournament.setName(newName);
                     System.out.println("Tournament name updated.");
                 }
@@ -229,22 +234,20 @@ public class main {
                 case 2 -> {
                     try {
                         if (selectedTournament.getMatches().isEmpty()) {
-                            System.out.println("No matches found. Generate matches first.");
+                            System.out.println("[ERROR] No matches found. Generate matches first.");
                         } else {
-                            selectedTournament.playNextMatch(userIn); 
+                            selectedTournament.playNextMatch(userIn);
                         }
                     } catch (Exception e) {
-                        System.out.println("Could not play match: " + e.getMessage());
-                        userIn.nextLine();
+                        System.out.println("[ERROR] Could not play match: " + e.getMessage());
                     }
                 }
 
                 case 3 -> {
-                    if (selectedTournament.getMatches().isEmpty()) {
-                        System.out.println("No matches created yet.");
-                    } else {
+                    if (selectedTournament.getMatches().isEmpty())
+                        System.out.println("[ERROR] No matches created yet.");
+                    else
                         selectedTournament.displayMatches();
-                    }
                 }
 
                 case 4 -> selectedTournament.displayResults();
@@ -257,13 +260,13 @@ public class main {
                         selectedTournament.refreshStandings();
                         System.out.println("Last result undone successfully.");
                     } catch (Exception e) {
-                        System.out.println("Nothing to undo: " + e.getMessage());
+                        System.out.println("[ERROR] Nothing to undo: " + e.getMessage());
                     }
                 }
 
                 case 7 -> editing = false;
 
-                default -> System.out.println("Invalid selection.");
+                default -> System.out.println("[ERROR] Invalid selection. Please choose 1-7.");
             }
         }
     }
