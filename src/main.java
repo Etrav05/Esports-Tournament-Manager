@@ -220,7 +220,8 @@ public class main {
             System.out.println("|  4. View results                 |");
             System.out.println("|  5. View standings               |");
             System.out.println("|  6. Undo last result             |");
-            System.out.println("|  7. Back                         |");
+            System.out.println("|  7. Save tournament to file      |");
+            System.out.println("|  8. Back                         |");
             System.out.println("+----------------------------------+");
             int choice = readInt(userIn, "Selection: ");
 
@@ -264,7 +265,17 @@ public class main {
                     }
                 }
 
-                case 7 -> editing = false;
+                case 7 -> {
+                    try {
+                        String writePath = readString(userIn, "Enter output file path: ");
+                        FileManager.saveResultsToFile(selectedTournament, writePath);
+                        System.out.println("[OK] Tournament saved to: " + writePath);
+                    } catch (Exception e) {
+                        System.out.println("[ERROR] Unable to save tournament: " + e.getMessage());
+                    }
+                }
+
+                case 8 -> editing = false;
 
                 default -> System.out.println("[ERROR] Invalid selection. Please choose 1-7.");
             }

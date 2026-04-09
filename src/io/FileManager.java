@@ -2,10 +2,12 @@ package src.io;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+
 import src.core.Tournament;
 import src.core.TournamentFormat;
 import src.factories.TournamentFactory;
@@ -101,6 +103,16 @@ public class FileManager {
     }
 
     public static void saveResultsToFile(Tournament tournament, String filePath) throws IOException {
+        File file = new File(filePath);
+
+        // Create parent directories if they don't exist
+        if (file.getParentFile() != null) {
+            file.getParentFile().mkdirs();
+        }
+
+        // Creates the file if it doesn't exist
+        file.createNewFile();
+           
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write("Tournament Name: " + tournament.getName());
             writer.newLine();
@@ -123,12 +135,16 @@ public class FileManager {
             writer.write("Results: ");
             writer.newLine();
 
-            if (tournament.getMatchHistory().isEmpty()) {
+            ArrayList<Match> allMatches = new ArrayList<>();
+            allMatches.addAll(tournament.getMatchHistory());
+            allMatches.addAll(tournament.getMatches());
+
+            if (allMatches.isEmpty()) {
                 writer.write("No matches played yet.");
                 writer.newLine();
             } else {
-                for (int i = 0; i < tournament.getMatchHistory().size(); i++) {
-                    Match match = tournament.getMatchHistory().get(i);
+                for (int i = 0; i < allMatches.size(); i++) {
+                    Match match = allMatches.get(i);
 
                     writer.write(
                         "Match " + (i + 1)
